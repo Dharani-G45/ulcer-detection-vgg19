@@ -138,7 +138,7 @@ Render Deployment
 ```
 ---
 ## 📂 Project Structure
-
+```text
 ulcer-detection-vgg19/
 │
 ├── detector/
@@ -184,6 +184,7 @@ ulcer-detection-vgg19/
 ├── manage.py
 ├── requirements.txt
 └── README.md
+```
 ---
 
 ## ☁️ Deployment
