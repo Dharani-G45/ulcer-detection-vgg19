@@ -89,6 +89,7 @@ The final optimized model is approximately **19.32 MB** and is used by the deplo
 
 ## 🔄 Application Workflow
 
+```text
 Endoscopy Image Upload
         ↓
 Image Validation
@@ -107,10 +108,12 @@ Confidence Score
         ↓
 Web Result Display 
 
+```
 ---
 
 ##  🧠 Model Development Workflow
 
+```text
 Kvasir V2 Dataset
         ↓
 4-Class Dataset Preparation
