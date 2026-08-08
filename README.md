@@ -135,3 +135,81 @@ Optimized LiteRT Evaluation
 Django Integration
         ↓
 Render Deployment
+```
+---
+## 📂 Project Structure
+
+ulcer-detection-vgg19/
+│
+├── detector/
+│   ├── services/
+│   │   └── predictor.py
+│   │
+│   ├── static/
+│   │   └── detector/
+│   │       ├── css/
+│   │       ├── images/
+│   │       └── js/
+│   │
+│   ├── templates/
+│   │   └── detector/
+│   │       └── upload.html
+│   │
+│   ├── forms.py
+│   ├── urls.py
+│   └── views.py
+│
+├── model/
+│   ├── class_names.json
+│   └── vgg19_ulcer_disease_finetuned_optimized.tflite
+│
+├── training/
+│   ├── prepare_dataset.py
+│   ├── split_dataset.py
+│   ├── train_model.py
+│   ├── fine_tune_model.py
+│   ├── evaluate_model.py
+│   ├── evaluate_finetuned_model.py
+│   ├── convert_model_to_tflite.py
+│   └── evaluate_tflite_model.py
+│
+├── ulcer_detection/
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+│
+├── .gitignore
+├── .python-version
+├── manage.py
+├── requirements.txt
+└── README.md
+---
+
+## ☁️ Deployment
+
+The application is deployed on Render using:
+
+- Python 3.11
+- Django 5.2
+- Gunicorn
+- WhiteNoise
+- LiteRT
+- Optimized 19.32 MB TFLite model
+---
+## ⚠️ Model Limitations
+
+The model is a closed-set four-class image classifier.
+
+It can classify only:
+
+- Normal
+- Esophagitis
+- Ulcerative Colitis
+- Polyps
+
+Images outside these categories may still be assigned to one of the four supported classes.
+
+The model achieved **85.17% test accuracy** on the prepared test dataset and should not be considered a clinical diagnostic system.
+
+---
