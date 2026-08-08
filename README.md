@@ -106,4 +106,28 @@ Predicted Disease Class
         ↓
 Confidence Score
         ↓
-Web Result Display
+Web Result Display '
+
+🧠 Model Development Workflow
+
+Kvasir V2 Dataset
+        ↓
+4-Class Dataset Preparation
+        ↓
+Balanced Dataset
+        ↓
+Train / Validation / Test Split
+        ↓
+VGG19 Transfer Learning
+        ↓
+Fine-Tuning
+        ↓
+Model Evaluation
+        ↓
+TensorFlow Lite Conversion
+        ↓
+Optimized LiteRT Evaluation
+        ↓
+Django Integration
+        ↓
+Render Deployment
