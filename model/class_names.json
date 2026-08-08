@@ -1,0 +1,14 @@
+{
+    "class_names": [
+        "normal",
+        "esophagitis",
+        "ulcerative-colitis",
+        "polyps"
+    ],
+    "image_size": [
+        112,
+        112
+    ],
+    "model": "VGG19",
+    "number_of_classes": 4
+}

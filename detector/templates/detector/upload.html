@@ -1,0 +1,924 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="AI-powered gastrointestinal disease image classification using a fine-tuned VGG19 deep learning model.">
+
+    <title>
+        Ulcer Detection | AI Medical Image Analysis
+    </title>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'detector/images/favicon.png' %}">
+    
+    <link rel="shortcut icon" href="{% static 'detector/images/favicon.png' %}">
+
+    <link rel="stylesheet" href="{% static 'detector/css/style.css' %}">
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+     HEADER
+========================================================= -->
+
+    <header class="header">
+
+        <div class="container navbar">
+
+            <a class="brand" href="#home" aria-label="Ulcer Detection Home">
+
+                <!-- New AI Medical Scan Logo -->
+
+                <div class="brand-logo">
+
+                    <svg viewBox="0 0 48 48" aria-hidden="true">
+
+                        <path class="logo-corner" d="M15 9H9V15" />
+
+                        <path class="logo-corner" d="M33 9H39V15" />
+
+                        <path class="logo-corner" d="M9 33V39H15" />
+
+                        <path class="logo-corner" d="M39 33V39H33" />
+
+                        <circle class="logo-ring" cx="24" cy="24" r="9" />
+
+                        <circle class="logo-core" cx="24" cy="24" r="3.5" />
+
+                        <path class="logo-pulse" d="M13 25H18L21 19L25 30L28 23H35" />
+
+                    </svg>
+
+                </div>
+
+
+                <div class="brand-content">
+
+                    <span class="brand-name">
+                        Ulcer Detection
+                    </span>
+
+                    <span class="brand-tagline">
+                        AI Medical Image Analysis
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <button class="mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Open navigation">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </button>
+
+
+            <nav class="navigation" id="navigation">
+
+                <a href="#home" class="nav-link active">
+                    Home
+                </a>
+
+                <a href="#about" class="nav-link">
+                    About
+                </a>
+
+                <a href="#help" class="nav-link">
+                    Help
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+    <main>
+
+
+        <!-- =========================================================
+     HERO / APPLICATION
+========================================================= -->
+
+        <section class="hero" id="home">
+
+            <div class="container">
+
+
+                <div class="hero-heading">
+
+                    <span class="eyebrow">
+                        DEEP LEARNING MEDICAL IMAGE ANALYSIS
+                    </span>
+
+                    <h1>
+                        AI-Powered Gastrointestinal
+                        Disease Detection
+                    </h1>
+
+                    <p>
+                        Upload a gastrointestinal endoscopy image and
+                        analyze it using our fine-tuned VGG19
+                        deep-learning classification model.
+                    </p>
+
+                </div>
+
+
+
+                <div class="application-card">
+
+
+                    <!-- =================================================
+                 IMAGE INPUT
+            ================================================== -->
+
+                    <section class="upload-panel">
+
+                        <div class="panel-heading">
+
+                            <span class="panel-label">
+                                IMAGE INPUT
+                            </span>
+
+                            <h2>
+                                Upload Endoscopy Image
+                            </h2>
+
+                            <p>
+                                Upload a clear gastrointestinal
+                                endoscopy image for AI analysis.
+                            </p>
+
+                        </div>
+
+
+                        <form method="POST" enctype="multipart/form-data" id="predictionForm">
+
+                            {% csrf_token %}
+
+
+                            <div class="upload-zone" id="uploadZone">
+
+
+                                <div class="upload-placeholder" id="uploadPlaceholder" {% if preview_data_url %}
+                                    style="display: none;" {% endif %}>
+
+
+                                    <div class="upload-icon">
+
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                                            <path
+                                                d="M12 16V4M12 4L7.5 8.5M12 4L16.5 8.5M5 14.5C2.8 14.9 2 16.4 2 18C2 20.2 3.8 22 6 22H18C20.2 22 22 20.2 22 18C22 15.9 20.4 14.2 18.3 14C17.8 10.6 14.9 8 11.5 8" />
+
+                                        </svg>
+
+                                    </div>
+
+
+                                    <h3>
+                                        Drag & drop an image here
+                                    </h3>
+
+
+                                    <p>
+                                        or click to browse from your device
+                                    </p>
+
+
+                                    <span class="choose-button">
+                                        Choose File
+                                    </span>
+
+
+                                    <small>
+                                        JPG, PNG or WEBP — Max 5 MB
+                                    </small>
+
+                                </div>
+
+
+
+                                <div class="preview-container {% if preview_data_url %}visible{% endif %}"
+                                    id="previewContainer">
+
+                                    <img src="{{ preview_data_url|default:'' }}" alt="Selected endoscopy image"
+                                        id="imagePreview">
+
+                                    <div class="preview-overlay">
+                                        Selected Image
+                                    </div>
+
+                                </div>
+
+
+                                <div class="hidden-input">
+                                    {{ form.image }}
+                                </div>
+
+                            </div>
+
+
+
+                            {% if form.image.errors %}
+
+                            <div class="form-error">
+
+                                {% for error in form.image.errors %}
+
+                                <p>
+                                    {{ error }}
+                                </p>
+
+                                {% endfor %}
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            {% if error_message %}
+
+                            <div class="form-error">
+
+                                <p>
+                                    {{ error_message }}
+                                </p>
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            <div class="file-information {% if uploaded_filename %}visible{% endif %}"
+                                id="fileInformation">
+
+                                <div class="file-details">
+
+                                    <span>
+                                        Selected file
+                                    </span>
+
+                                    <strong id="fileName">
+
+                                        {% if uploaded_filename %}
+
+                                        {{ uploaded_filename }}
+
+                                        {% else %}
+
+                                        No file selected
+
+                                        {% endif %}
+
+                                    </strong>
+
+                                </div>
+
+
+                                <button type="button" class="remove-image" id="removeImage">
+                                    Remove
+                                </button>
+
+                            </div>
+
+
+
+                            <button type="submit" class="predict-button" id="predictButton" disabled>
+
+                                <span class="button-text" id="predictButtonText">
+                                    Predict Ulcer Type
+                                </span>
+
+                                <span class="button-icon">
+                                    →
+                                </span>
+
+                            </button>
+
+                        </form>
+
+
+
+                        <div class="medical-notice">
+
+                            <div class="notice-icon">
+                                i
+                            </div>
+
+                            <p>
+                                <strong>Academic project:</strong>
+                                Upload only gastrointestinal endoscopy
+                                images. This AI system is not a substitute
+                                for professional medical diagnosis.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+
+
+                    <!-- =================================================
+                 AI RESULT
+            ================================================== -->
+
+                    <section class="result-panel">
+
+                        <div class="panel-heading">
+
+                            <span class="panel-label">
+                                AI OUTPUT
+                            </span>
+
+                            <h2>
+                                Prediction Result
+                            </h2>
+
+                            <p>
+                                Classification and confidence information
+                                will appear here.
+                            </p>
+
+                        </div>
+
+
+
+                        {% if prediction %}
+
+
+                        <div class="prediction-summary">
+
+
+                            <div class="success-icon">
+                                ✓
+                            </div>
+
+
+                            <div class="prediction-content">
+
+                                <span class="result-label">
+                                    Detected Type
+                                </span>
+
+
+                                <h3 class="prediction-name">
+                                    {{ prediction }}
+                                </h3>
+
+
+                                <span class="result-label">
+                                    Confidence Score
+                                </span>
+
+
+                                <strong class="confidence">
+                                    {{ confidence }}%
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="probability-section">
+
+                            <h3>
+                                Prediction Probabilities
+                            </h3>
+
+
+                            {% for item in probabilities %}
+
+                            <div class="probability-item">
+
+
+                                <div class="probability-heading">
+
+                                    <span>
+                                        {{ item.label }}
+                                    </span>
+
+                                    <strong>
+                                        {{ item.value }}%
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="progress-track">
+
+                                    <div class="progress-value" style="width: {{ item.value }}%;"></div>
+
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+
+
+
+                        {% else %}
+
+
+                        <div class="waiting-result">
+
+                            <div class="waiting-graphic">
+
+                                <div class="scan-circle">
+
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                                        <path d="M4 7V4H7M17 4H20V7M20 17V20H17M7 20H4V17M8 12H16M12 8V16" />
+
+                                    </svg>
+
+                                </div>
+
+                            </div>
+
+
+                            <h3>
+                                Waiting for analysis
+                            </h3>
+
+
+                            <p>
+                                Select a gastrointestinal endoscopy
+                                image and click
+                                <strong>Predict Ulcer Type</strong>
+                                to begin.
+                            </p>
+
+
+                            <div class="waiting-steps">
+
+                                <div>
+                                    <span>1</span>
+                                    Image Upload
+                                </div>
+
+                                <div>
+                                    <span>2</span>
+                                    Preprocessing
+                                </div>
+
+                                <div>
+                                    <span>3</span>
+                                    AI Prediction
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {% endif %}
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================================
+     WORKFLOW
+========================================================= -->
+
+        <section class="workflow-section" id="about">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="eyebrow">
+                        PROJECT WORKFLOW
+                    </span>
+
+                    <h2>
+                        How the AI Detection System Works
+                    </h2>
+
+                    <p>
+                        The application processes each image through
+                        a fine-tuned VGG19 deep-learning pipeline.
+                    </p>
+
+                </div>
+
+
+                <div class="workflow">
+
+
+                    <article class="workflow-item">
+
+                        <div class="workflow-number">
+                            01
+                        </div>
+
+                        <div class="workflow-icon">
+                            ↑
+                        </div>
+
+                        <h3>
+                            Upload Image
+                        </h3>
+
+                        <p>
+                            User selects a GI endoscopy image.
+                        </p>
+
+                    </article>
+
+
+                    <div class="workflow-arrow">
+                        →
+                    </div>
+
+
+                    <article class="workflow-item">
+
+                        <div class="workflow-number">
+                            02
+                        </div>
+
+                        <div class="workflow-icon">
+                            ◰
+                        </div>
+
+                        <h3>
+                            Preprocessing
+                        </h3>
+
+                        <p>
+                            Image is converted to RGB and resized
+                            to 112 × 112 pixels.
+                        </p>
+
+                    </article>
+
+
+                    <div class="workflow-arrow">
+                        →
+                    </div>
+
+
+                    <article class="workflow-item">
+
+                        <div class="workflow-number">
+                            03
+                        </div>
+
+                        <div class="workflow-icon">
+                            ⬡
+                        </div>
+
+                        <h3>
+                            Feature Extraction
+                        </h3>
+
+                        <p>
+                            Fine-tuned VGG19 extracts visual features.
+                        </p>
+
+                    </article>
+
+
+                    <div class="workflow-arrow">
+                        →
+                    </div>
+
+
+                    <article class="workflow-item">
+
+                        <div class="workflow-number">
+                            04
+                        </div>
+
+                        <div class="workflow-icon">
+                            AI
+                        </div>
+
+                        <h3>
+                            Classification
+                        </h3>
+
+                        <p>
+                            The classifier calculates four
+                            prediction probabilities.
+                        </p>
+
+                    </article>
+
+
+                    <div class="workflow-arrow">
+                        →
+                    </div>
+
+
+                    <article class="workflow-item">
+
+                        <div class="workflow-number">
+                            05
+                        </div>
+
+                        <div class="workflow-icon">
+                            ✓
+                        </div>
+
+                        <h3>
+                            Result
+                        </h3>
+
+                        <p>
+                            Predicted class and confidence
+                            are displayed.
+                        </p>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================================
+     CLASSIFICATION
+========================================================= -->
+
+        <section class="classes-section">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="eyebrow">
+                        CLASSIFICATION
+                    </span>
+
+                    <h2>
+                        Supported Image Classes
+                    </h2>
+
+                    <p>
+                        The fine-tuned VGG19 model classifies
+                        gastrointestinal images into four categories.
+                    </p>
+
+                </div>
+
+
+                <div class="class-grid">
+
+
+                    <article class="disease-card">
+
+                        <span class="disease-color normal"></span>
+
+                        <div>
+
+                            <h3>
+                                Normal
+                            </h3>
+
+                            <p>
+                                Normal gastrointestinal anatomical images.
+                            </p>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="disease-card">
+
+                        <span class="disease-color esophagitis"></span>
+
+                        <div>
+
+                            <h3>
+                                Esophagitis
+                            </h3>
+
+                            <p>
+                                Endoscopic patterns classified
+                                as esophagitis.
+                            </p>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="disease-card">
+
+                        <span class="disease-color ulcerative"></span>
+
+                        <div>
+
+                            <h3>
+                                Ulcerative Colitis
+                            </h3>
+
+                            <p>
+                                Endoscopic patterns classified
+                                as ulcerative colitis.
+                            </p>
+
+                        </div>
+
+                    </article>
+
+
+                    <article class="disease-card">
+
+                        <span class="disease-color polyps"></span>
+
+                        <div>
+
+                            <h3>
+                                Polyps
+                            </h3>
+
+                            <p>
+                                Gastrointestinal images classified
+                                as polyps.
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================================================
+     HELP
+========================================================= -->
+
+        <section class="help-section" id="help">
+
+            <div class="container help-layout">
+
+
+                <div>
+
+                    <span class="eyebrow">
+                        USER GUIDE
+                    </span>
+
+                    <h2>
+                        How to Use the Application
+                    </h2>
+
+                    <p>
+                        Use gastrointestinal endoscopy imagery
+                        with this academic classification model.
+                    </p>
+
+                </div>
+
+
+
+                <div class="help-list">
+
+
+                    <article>
+
+                        <span>
+                            01
+                        </span>
+
+                        <div>
+
+                            <h3>
+                                Choose an Image
+                            </h3>
+
+                            <p>
+                                Upload a JPG, PNG or WEBP
+                                gastrointestinal endoscopy image.
+                            </p>
+
+                        </div>
+
+                    </article>
+
+
+                    <article>
+
+                        <span>
+                            02
+                        </span>
+
+                        <div>
+
+                            <h3>
+                                Run AI Analysis
+                            </h3>
+
+                            <p>
+                                Click Predict Ulcer Type and allow
+                                VGG19 to process the image.
+                            </p>
+
+                        </div>
+
+                    </article>
+
+
+                    <article>
+
+                        <span>
+                            03
+                        </span>
+
+                        <div>
+
+                            <h3>
+                                Review Result
+                            </h3>
+
+                            <p>
+                                View predicted class, confidence
+                                and all class probabilities.
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <footer class="footer">
+
+        <div class="container footer-content">
+
+            <div>
+
+                <strong>
+                    Ulcer Detection
+                </strong>
+
+                <p>
+                    Fine-Tuned VGG19 Gastrointestinal
+                    Image Classification
+                </p>
+
+            </div>
+
+
+            <p>
+                Academic Deep Learning Project
+            </p>
+
+        </div>
+
+    </footer>
+
+    <script src="{% static 'detector/js/script.js' %}"></script>
+
+</body>
+
+</html>
